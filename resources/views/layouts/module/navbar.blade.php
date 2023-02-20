@@ -9,9 +9,9 @@
                     </a>
                 </li>
                 <li class="text-center">
-                    <a href="#" class="nav-link text-white">
+                    <a href="{{ route('todos.index') }}" class="nav-link text-white">
                         <i class="bi-list-check" style="font-size: 2rem;"></i><br/>
-                        {{ __('Todo list') }}
+                        {{ __('Task list') }}
                     </a>
                 </li>
                 <li class="text-center">

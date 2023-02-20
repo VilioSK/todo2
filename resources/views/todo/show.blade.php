@@ -3,12 +3,12 @@
 <div class="row">
     <div class="col mb-8">
         <h3>
-            <i class="bi-folder"></i>
-            {{ __('Category detail') }}
+            <i class="bi-calendar-event"></i>
+            {{ __('Task item detail') }}
         </h3>
     </div>
     <div class="col mb-4 text-end">
-        <a href="{{ route('categories.index') }}" class="btn btn-primary">
+        <a href="{{ route('todos.index') }}" class="btn btn-primary">
             <i class="bi bi-arrow-left"></i> 
             {{ __('Back') }}
         </a>
@@ -18,17 +18,17 @@
 @section('content')
     <div class="card border-light" >
         <div class="card-body">
-        <h5 class="card-title">{{ $category->name}}</h5>
-        <p class="card-text">{{ $category->description}}</p>
-        <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-primary">
-            <i class="bi bi-pencil"></i>
+        <h5 class="card-title">{{ $todo->name}}</h5>
+        <p class="card-text">{{ $todo->description}}</p>
+        <a href="{{ route('todos.edit', $todo->id) }}" class="btn btn-primary">
+            <i class="bi bi-calendar"></i>
             {{ __('Edit') }}
         </a>
-        <form action="{{ route('categories.destroy', $category->id) }}" method="POST">
+        <form action="{{ route('todos.destroy', $todo->id) }}" method="POST">
             @csrf
             @method('DELETE')
             <button class="btn btn-danger">
-                <i class="bi bi-trash"></i>
+                <i class="bi bi-calendar-x"></i>
                 {{ __('Delete') }}
             </button>
         </form>

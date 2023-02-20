@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TodoController;
 
 /*
@@ -20,10 +21,18 @@ Route::get('/', function () {
     return view('home');
 });
 
+/* Default routes */
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+/* Authentication routes */
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+/* Category routes */
 Route::resource('categories', CategoryController::class);
+
+/* ToDo routes */
 Route::resource('todos', TodoController::class);
+Route::put('/todos/finish/{todo}', [TodoController::class, 'finish'])->name('todos.finish');
+Route::put('/todos/activate/{todo}', [TodoController::class, 'activate'])->name('todos.activate');
+Route::get('/todos/restore/{todo}', [TodoController::class, 'restore'])->name('todos.restore');
 

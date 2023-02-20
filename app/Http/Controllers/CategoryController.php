@@ -85,10 +85,10 @@ class CategoryController extends Controller
             'description' => 'required']
         );
 
-        $category = Category::findOrFail($category->id);
-        $category->name = $request->name;
-        $category->description = $request->description;
-        $category->save();
+        $category_update = Category::findOrFail($category->id);
+        $category_update->name = $request->name;
+        $category_update->description = $request->description;
+        $category_update->save();
 
         return redirect()->route('categories.index')->with('alert.success', 'Category changes has been saved');
     }
@@ -98,8 +98,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        $category = Category::findOrFail($category->id);
-        $category->delete();
+        $category_delete = Category::findOrFail($category->id);
+        $category_delete->delete();
 
         return redirect()->route('categories.index')->with('alert.success', 'Category has been deleted');
     }

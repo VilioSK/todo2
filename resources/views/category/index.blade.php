@@ -9,7 +9,7 @@
     </div>
     <div class="col mb-4 text-end">
         <a href="{{ route('categories.create') }}" class="btn btn-primary">
-            <i class="bi bi-folder-plus"></i>
+            <i class="bi bi-plus-lg"></i>
             {{ __('Add category') }}
         </a>
     </div>
@@ -25,22 +25,24 @@
                 </thead>
                 @foreach($category_list as $category)
                     <tr>
-                        <td class="col-10">
+                        <td class="col-11">
                             <a href="{{ route('categories.show', $category->id) }}">
                                 {{ $category->name }}
                             </a>                        
                         </td>
                         <td class="col-1">
-                            <a class="btn btn-light" href="{{ route('categories.edit', $category->id) }}">
-                                <i class="bi bi-folder-check" style="font-size: 2rem; color: green"></i>
-                            </a>
+                            <a class="btn btn-light" href="{{ route('categories.edit', $category->id) }}" data-bs-toggle="tooltip" data-bs-title="Edit category">
+                                <i class="bi bi-pencil" style="font-size: 2rem; color: blue;"></i>
+                            </a>                        
                         </td>
                         <td class="col-1">
-                        <form action="{{ route('categories.destroy', $category->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-light"><i class="bi-folder-x" style="font-size: 2rem; color: red;"></i></button>
-                        </form>                            
+                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-light" data-bs-toggle="tooltip" data-bs-title="Delete category">
+                                    <i class="bi-trash" style="font-size: 2rem; color: red;"></i>
+                                </button>
+                            </form>                            
                         </td>
                     </tr>
                 @endforeach
