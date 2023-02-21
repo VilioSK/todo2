@@ -32,7 +32,11 @@ Route::resource('categories', CategoryController::class);
 
 /* ToDo routes */
 Route::resource('todos', TodoController::class);
-Route::put('/todos/finish/{todo}', [TodoController::class, 'finish'])->name('todos.finish');
-Route::put('/todos/activate/{todo}', [TodoController::class, 'activate'])->name('todos.activate');
-Route::get('/todos/restore/{todo}', [TodoController::class, 'restore'])->name('todos.restore');
+Route::controller(TodoController::class)->group(function () {
+    Route::prefix('todos')->group(function () {
+        Route::put('/finish/{todo}', 'finish')->name('todos.finish');
+        Route::put('/activate/{todo}', 'activate')->name('todos.activate');
+        Route::get('/restore/{todo}', 'restore')->name('todos.restore');
+    });
+});
 
