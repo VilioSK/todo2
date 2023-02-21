@@ -28,21 +28,23 @@
                         <td class="col-11">
                             <a href="{{ route('categories.show', $category->id) }}">
                                 {{ $category->name }}
-                            </a>                        
+                            </a>
                         </td>
                         <td class="col-1">
                             <a class="btn btn-light" href="{{ route('categories.edit', $category->id) }}" data-bs-toggle="tooltip" data-bs-title="Edit category">
                                 <i class="bi bi-pencil" style="font-size: 2rem; color: blue;"></i>
-                            </a>                        
+                            </a>
                         </td>
                         <td class="col-1">
+                            @if($category->default == false)
                             <form action="{{ route('categories.destroy', $category->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-light" data-bs-toggle="tooltip" data-bs-title="Delete category">
                                     <i class="bi-trash" style="font-size: 2rem; color: red;"></i>
                                 </button>
-                            </form>                            
+                            </form>
+                            @endif    
                         </td>
                     </tr>
                 @endforeach

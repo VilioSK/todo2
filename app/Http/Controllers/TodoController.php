@@ -29,6 +29,10 @@ class TodoController extends Controller
      */
     public function index()
     {
+        // authorize action
+        $this->authorize('viewAny', Todo::class);
+
+        // get data
         $todo_data['active'] = Todo::where('user_id', Auth::id())->where('finished', 0)->get();
         $todo_data['finished'] = Todo::where('user_id', Auth::id())->where('finished', 1)->get();
         $todo_data['deleted'] = Todo::onlyTrashed()->where('user_id', Auth::id())->get();
@@ -41,6 +45,10 @@ class TodoController extends Controller
      */
     public function create()
     {
+        // authorize action
+        $this->authorize('create', Todo::class);
+
+        // get needed data
         $category_list = Category::where('user_id', Auth::id())->get();
 
         return view('todo.add', ['category_list' => $category_list]);
@@ -51,18 +59,23 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
+        // authorize action
+        $this->authorize('create', Todo::class);
+        
+        // validate input data
         $this->validate($request, [
             'name' => 'required',
             'description' => 'required']
         );
 
-        $todo = new Todo();
-        $todo->user_id = Auth::id();
-        $todo->category_id = $request->category_id;
-        $todo->name = $request->name;
-        $todo->description = $request->description;
-        $todo->finished = false;
-        $todo->save();
+        // save changes
+        $_todo = new Todo();
+        $_todo->user_id = Auth::id();
+        $_todo->category_id = $request->category_id;
+        $_todo->name = $request->name;
+        $_todo->description = $request->description;
+        $_todo->finished = false;
+        $_todo->save();
 
         return redirect()->route('todos.index')->with('alert.success', 'Task has been created');
     }
@@ -72,14 +85,10 @@ class TodoController extends Controller
      */
     public function show(Todo $todo)
     {
-        $todo_show = Todo::withTrashed()
-                        ->where('user_id', Auth::id())
-                        ->where('id', $todo->id)
-                        ->first();
-        if($todo_show == NULL)
-            return redirect()->route('todos.index')->with('alert.error','Unable to find task');
+        // authorize action
+        $this->authorize('view', $todo);
 
-        return view('todo.show', ['todo' => $todo_show]);
+        return view('todo.show', ['todo' => $todo]);
     }
 
     /**
@@ -87,6 +96,9 @@ class TodoController extends Controller
      */
     public function edit(Todo $todo)
     {
+        // authorize action
+        $this->authorize('update', $todo);
+
         return view('todo.edit', ['todo' => $todo]);
     }
 
@@ -95,20 +107,20 @@ class TodoController extends Controller
      */
     public function update(Request $request, Todo $todo)
     {
+        // authorize action
+        $this->authorize('update', $todo);
+
+        // validate input data
         $this->validate($request, [
             'name' => 'required',
             'description' => 'required']
         );
 
-        $todo_update = Todo::where('user_id', Auth::id())
-                        ->where('id', $todo->id)
-                        ->first();
-        if($todo_update == NULL)
-            return redirect()->route('todos.index')->with('alert.error','Unable to find task item');
-
-        $todo_update->name = $request->name;
-        $todo_update->description = $request->description;
-        $todo_update->save();
+        // save changes
+        $_todo = Todo::findOrFail($todo->id);
+        $_todo->name = $request->name;
+        $_todo->description = $request->description;
+        $_todo->save();
 
         return redirect()->route('todos.index')->with('alert.success','Task has been changed');
     }
@@ -118,14 +130,13 @@ class TodoController extends Controller
      */
     public function finish(Request $request, Todo $todo)
     {
-        $todo_finish = Todo::where('user_id', Auth::id())
-                        ->where('id', $todo->id)
-                        ->first();
-        if($todo_finish == NULL)
-            return redirect()->route('todos.index')->with('alert.error','Unable to find task item');
+        // authorize action
+        $this->authorize('update', $todo);
 
-        $todo->finished = true;
-        $todo->save();
+        // save changes
+        $_todo = Todo::findOrFail($todo->id);
+        $_todo->finished = true;
+        $_todo->save();
 
         return redirect()->route('todos.index')->with('alert.success','Task has been restored');
     }
@@ -135,14 +146,13 @@ class TodoController extends Controller
      */
     public function activate(Request $request, Todo $todo)
     {
-        $todo_finish = Todo::where('user_id', Auth::id())
-                        ->where('id', $todo->id)
-                        ->first();
-        if($todo_finish == NULL)
-            return redirect()->route('todos.index')->with('alert.error','Unable to find task item');
+        // authorize action
+        $this->authorize('update', $todo);        
 
-        $todo->finished = false;
-        $todo->save();
+        // save changes
+        $_todo = Todo::findOrFail($todo->id);
+        $_todo->finished = false;
+        $_todo->save();
 
         return redirect()->route('todos.index')->with('alert.success','Task has been activated');
     }    
@@ -152,12 +162,11 @@ class TodoController extends Controller
      */
     public function destroy(Todo $todo)
     {
-        $todo_delete = Todo::where('user_id', Auth::id())
-                        ->where('id', $todo->id)
-                        ->first();
-        if($todo_delete == NULL)
-            return redirect()->route('todos.index')->with('alert.error','Unable to find task item');
-        $todo_delete->delete();
+        // authorize action
+        $this->authorize('delete', $todo);
+
+        // delete item
+        $todo->delete();
 
         return redirect()->route('todos.index')->with('alert.success','Task has been deleted');
     }
@@ -167,6 +176,9 @@ class TodoController extends Controller
      */
     public function restore($id)
     {
+        // authorize action
+        //$this->authorize('restore', $category);
+
         $todo_restore = Todo::withTrashed()
                         ->where('user_id', Auth::id())
                         ->where('id', $id)

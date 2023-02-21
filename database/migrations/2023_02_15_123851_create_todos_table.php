@@ -33,6 +33,7 @@ return new class extends Migration
             $table->dropColumn('user_id');
             $table->dropForeign('todos_category_id_foreign');
             $table->dropColumn('category_id');
+            $table->dropSoftDeletes();
         });
 
         Schema::dropIfExists('todos');        

@@ -23,10 +23,14 @@ class CategoryController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+       * Display a listing of the resource.
      */
     public function index()
     {
+        // authorize action
+        $this->authorize('viewAny', Category::class);
+
+        // get data
         $category_list = Category::where('user_id', Auth::id())->get();
     
         return view('category.index', ['category_list' => $category_list]);
@@ -37,6 +41,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        // authorize action
+        $this->authorize('create', Category::class);
+
         return view('category.add');
     }
 
@@ -45,16 +52,22 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        // authorize action
+        $this->authorize('create', Category::class);
+
+        // validate data
         $this->validate($request, [
             'name' => 'required',
             'description' => 'required']
         );
 
-        $category = new Category();
-        $category->user_id = Auth::id();
-        $category->name = $request->name;
-        $category->description = $request->description;
-        $category->save();
+        // store category
+        $_category = new Category();
+        $_category->user_id = Auth::id();
+        $_category->name = $request->name;
+        $_category->description = $request->description;
+        $_category->default = false;
+        $_category->save();
 
         return redirect()->route('categories.index')->with('alert.success', 'Category has been created');
     }
@@ -64,6 +77,9 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+        // authorize action
+        $this->authorize('view', $category);
+
         return view('category.show', ['category' => $category]);
     }
 
@@ -72,6 +88,9 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
+        // authorize action
+        $this->authorize('update', $category);
+
         return view('category.edit', ['category' => $category]);
     }
 
@@ -80,15 +99,20 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        // authorize action
+        $this->authorize('update', $category);
+
+        // validate data
         $this->validate($request, [
             'name' => 'required',
             'description' => 'required']
         );
 
-        $category_update = Category::findOrFail($category->id);
-        $category_update->name = $request->name;
-        $category_update->description = $request->description;
-        $category_update->save();
+        // store changes
+        $_category = Category::findOrFail($category->id);
+        $_category->name = $request->name;
+        $_category->description = $request->description;
+        $_category->save();
 
         return redirect()->route('categories.index')->with('alert.success', 'Category changes has been saved');
     }
@@ -98,8 +122,16 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        $category_delete = Category::findOrFail($category->id);
-        $category_delete->delete();
+        // authorize action
+        $this->authorize('delete', $category);
+
+        $_category = Category::findOrFail($category->id);
+        
+        // unable to delete default category
+        if($_category->default == true)
+            return redirect()->route('categories.index')->with('alert.info', 'Unable to delete default category');
+        
+        $_category->delete();
 
         return redirect()->route('categories.index')->with('alert.success', 'Category has been deleted');
     }
