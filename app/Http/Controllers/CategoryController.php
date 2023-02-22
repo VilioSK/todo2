@@ -44,7 +44,7 @@ class CategoryController extends Controller
         // authorize action
         $this->authorize('create', Category::class);
 
-        return view('category.add');
+        return view('category.create');
     }
 
     /**

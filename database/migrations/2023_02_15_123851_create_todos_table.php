@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('todos', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('user_id')->constrained()->onUpdate('restrict')->onDelete('restrict');
-            $table->foreignId('category_id')->constrained()->onUpdate('restrict')->onDelete('restrict');
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('category_id')->constrained();
             $table->string('name');
             $table->text('description');
             $table->boolean('finished');

@@ -51,7 +51,7 @@ class TodoController extends Controller
         // get needed data
         $category_list = Category::where('user_id', Auth::id())->get();
 
-        return view('todo.add', ['category_list' => $category_list]);
+        return view('todo.create', ['category_list' => $category_list]);
     }
 
     /**

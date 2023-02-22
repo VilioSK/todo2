@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ShareController;
 use App\Http\Controllers\TodoController;
 
 /*
@@ -39,4 +40,8 @@ Route::controller(TodoController::class)->group(function () {
         Route::get('/restore/{todo}', 'restore')->name('todos.restore');
     });
 });
+
+/* Share routes */
+Route::resource('shares', ShareController::class);
+
 

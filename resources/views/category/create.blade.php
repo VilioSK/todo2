@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-8">
         <h3>
-            <i class="bi bi-folder-plus"></i>
+            <i class="bi bi-plus-lg"></i>
             {{ __('Add category') }}
         </h3>
     </div>

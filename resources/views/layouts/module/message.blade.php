@@ -1,17 +1,25 @@
 <!-- Session messages -->
-@if ($message = Session::get('alert.info'))
+@if (session('status'))
     <div class="alert alert-primary">
         <div>
             <i class="bi bi-info-circle-fill"></i>
-            {{ $message }}
+            {{ session('status') }}
         </div>
     </div>
 @endif
-@if ($message = Session::get('alert.success'))
+@if (session('alert.info'))
+    <div class="alert alert-primary">
+        <div>
+            <i class="bi bi-info-circle-fill"></i>
+            {{ session('alert.info') }}
+        </div>
+    </div>
+@endif
+@if (session('alert.success'))
     <div class="alert alert-success">
         <div>
             <i class="bi bi-check-circle"></i>
-            {{ $message }}
+            {{ session('alert.success') }}
         </div>
     </div>
 @endif

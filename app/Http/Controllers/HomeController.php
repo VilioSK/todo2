@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+use App\Models\Category;
+use App\Models\Todo;
+use App\Models\Share;
 
 class HomeController extends Controller
 {
@@ -23,6 +28,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        // get needed data
+        $data['task_list'] = Todo::where('user_id', Auth::id())->where('finished', false)->get();
+        $data['category_list'] = Category::where('user_id', Auth::id())->get();
+        $data['share_list'] = Share::where('owner_id', Auth::id())->get();
+
+        return view('home', $data);
     }
 }

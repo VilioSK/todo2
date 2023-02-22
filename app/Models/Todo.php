@@ -27,4 +27,10 @@ class Todo extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function shares()
+    {
+        return $this->hasMany(Share::class);
+    }
+
 }

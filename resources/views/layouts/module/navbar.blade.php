@@ -3,7 +3,7 @@
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
                 <li class="text-center">
-                    <a href="#" class="nav-link text-white">
+                    <a href="{{ route('home') }}" class="nav-link text-white">
                         <i class="bi-palette" style="font-size: 2rem;"></i><br/>
                         {{ __('Dashboard') }}
                     </a>
@@ -18,6 +18,12 @@
                     <a href="{{ route('categories.index') }}" class="nav-link text-white">
                         <i class="bi-folder" style="font-size: 2rem;"></i><br/>
                         {{ __('Categories') }}
+                    </a>
+                </li>
+                <li class="text-center">
+                    <a href="{{ route('shares.index') }}" class="nav-link text-white">
+                        <i class="bi-share" style="font-size: 2rem;"></i><br/>
+                        {{ __('Shared tasks') }}
                     </a>
                 </li>
             </ul>
