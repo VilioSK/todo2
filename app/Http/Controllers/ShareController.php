@@ -10,6 +10,9 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+use App\Mail\ShareTask;
+use Illuminate\Support\Facades\Mail;
+
 use App\Models\Category;
 use App\Models\Todo;
 use App\Models\User;
@@ -35,16 +38,8 @@ class ShareController extends Controller
         $this->authorize('viewAny', Share::class);
 
         // get data
-        $share_data = Share::where('owner_id', Auth::id())->get();
-        /*
-        $share_data = DB::table('shares')
-            ->join('users', 'shares.user_id', '=' ,'users.id')
-            ->join('todos', 'shares.todo_id', '=' ,'todos.id')
-            ->where('todos.user_id', Auth::id())
-            ->get();
-        */
-    
-        //dd($share_data);
+        $share_data = Share::where('owner_id', Auth::id())->orWhere('user_id', Auth::id())->get();
+
         return view('share.index', ['share_data' => $share_data]);
     }
 
@@ -83,6 +78,22 @@ class ShareController extends Controller
         $_share->user_id = $request->user_id;
         $_share->todo_id = $request->todo_id;
         $_share->save();
+
+        // send email notification
+        Mail::to($_share->owner->email)->send(
+            new ShareTask(
+                $_share->name, 
+                $_share->owner->name, 
+                $_share->user->name
+            )
+        );
+        Mail::to($_share->user->email)->send(
+            new ShareTask(
+                $_share->name, 
+                $_share->user->name, 
+                $_share->owner->name
+            )
+        );
 
         return redirect()->route('shares.index')->with('alert.success', 'Task has been shared');
     }

@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+use App\Mail\TaskFinished;
+use Illuminate\Support\Facades\Mail;
 
 use App\Models\Category;
 use App\Models\Todo;
@@ -138,7 +142,15 @@ class TodoController extends Controller
         $_todo->finished = true;
         $_todo->save();
 
-        return redirect()->route('todos.index')->with('alert.success','Task has been restored');
+        // send email notification
+        Mail::to($_todo->user->email)->send(
+            new TaskFinished(
+                $_todo->name, 
+                $_todo->user->name
+            )
+        );
+
+        return redirect()->route('todos.index')->with('alert.success','Task has been finished');
     }
 
     /**
@@ -164,6 +176,9 @@ class TodoController extends Controller
     {
         // authorize action
         $this->authorize('delete', $todo);
+
+        // delete task from shared tasks
+        $deleted = DB::table('shares')->where('todo_id', $todo->id)->delete();
 
         // delete item
         $todo->delete();

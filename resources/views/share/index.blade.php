@@ -20,16 +20,20 @@
         <div class="col-12">
             <table class="table table-hover align-middle">
                 <thead class="table-light">
-                    <th>{{ __('Task name') }}</th>    
-                    <th>{{ __('User name') }}</th>
+                    <th>{{ __('Task name') }}</th>
+                    <th>{{ __('Task owner') }}</th>
+                    <th>{{ __('Shared user') }}</th>
                     <th colspan="3"></th>
                 </thead>
                 @foreach($share_data as $share)
                     <tr>
-                        <td class="col-5">
+                        <td class="col-3">
                             {{ $share->todo->name }}
                         </td>
-                        <td class="col-4">
+                        <td class="col-3">
+                            {{ $share->owner->name }}
+                        </td>
+                        <td class="col-3">
                             {{ $share->user->name }}
                         </td>
                         <td class="col-1">

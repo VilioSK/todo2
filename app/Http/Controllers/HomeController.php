@@ -31,7 +31,7 @@ class HomeController extends Controller
         // get needed data
         $data['task_list'] = Todo::where('user_id', Auth::id())->where('finished', false)->get();
         $data['category_list'] = Category::where('user_id', Auth::id())->get();
-        $data['share_list'] = Share::where('owner_id', Auth::id())->get();
+        $data['share_list'] = Share::where('owner_id', Auth::id())->orWhere('user_id', Auth::id())->get();
 
         return view('home', $data);
     }
